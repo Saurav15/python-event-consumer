@@ -1,24 +1,19 @@
-FROM python:3.12-slim
+FROM python:3.11-slim-bullseye
 
 WORKDIR /app
 
-# Create directory for health check file
-RUN mkdir -p /tmp
+# Create non-root user
+RUN useradd -m -u 1000 appuser
 
-# Copy requirements first for better caching
-COPY requirement.txt .
-RUN pip install --no-cache-dir -r requirement.txt
+# Install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt && \
+    rm -rf /root/.cache/pip
 
 # Copy application code
-COPY . .
+COPY --chown=appuser:appuser . .
 
-# Set environment variables
-ENV HEALTH_CHECK_INTERVAL=30
-ENV HEALTH_CHECK_FILE=/tmp/health.json
+# Switch to non-root user
+USER appuser
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD cat ${HEALTH_CHECK_FILE} | grep -q '"status":"healthy"' || exit 1
-
-# Run the application
-CMD ["python", "main.py"]
+CMD ["python", "main.py"] 
