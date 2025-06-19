@@ -6,15 +6,15 @@ This service is a Python-based event consumer that listens to document ingestion
 
 ---
 
-## Architecture & Flow
+## Architectural Flow
 
-```mermaid
-graph TD;
-  A[Backend Service] -- Publishes document_ingestion event --> B[Python Event Consumer];
-  B -- Downloads PDF from S3 --> C[S3 Bucket];
-  B -- Extracts text & summarizes --> D[Gemini AI (optional)];
-  B -- Publishes document_status_update event --> A;
-```
+1. The Backend Service publishes a `document_ingestion` event.
+2. The Python Event Consumer receives the event.
+3. The Python Event Consumer downloads the PDF from the S3 Bucket.
+4. The Python Event Consumer extracts text and summarizes it (optionally using Gemini AI).
+5. The Python Event Consumer publishes a `document_status_update` event back to the Backend Service.
+
+---
 
 - **Backend Service**: Publishes ingestion events to RabbitMQ and receives status updates.
 - **Python Event Consumer**: Listens for events, processes documents, and sends status updates.
