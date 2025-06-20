@@ -21,7 +21,7 @@ import tempfile
 from app.aws.s3_utils import download_from_s3
 from app.pdf_analyzer.analyzer import extract_text_from_pdf, summarize_text_with_gemini
 from app.rabbitmq.publisher import publish_status_update
-from app.enums import IngestionStatus
+from app.enum.enums import IngestionStatus
 
 def process_message(ch, method, properties,body):
     """

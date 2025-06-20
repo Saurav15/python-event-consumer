@@ -6,6 +6,10 @@ import PyPDF2
 import os
 import google.generativeai as genai
 
+def clean_text(text):
+    # Remove or replace surrogates and invalid characters
+    return text.encode('utf-8', 'replace').decode('utf-8')
+
 def extract_text_from_pdf(pdf_path):
     """Extract text from a PDF file at the given path using PyPDF2."""
     try:
@@ -14,7 +18,7 @@ def extract_text_from_pdf(pdf_path):
             text = ''
             for page in reader.pages:
                 text += page.extract_text() or ''
-        return text
+        return clean_text(text)
     except Exception as e:
         print(f"Failed to extract text from PDF: {e}")
         raise

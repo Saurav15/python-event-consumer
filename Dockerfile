@@ -16,4 +16,4 @@ COPY --chown=appuser:appuser . .
 # Switch to non-root user
 USER appuser
 
-CMD ["python", "main.py"] 
+CMD ["python"," -u" ,"main.py"] 
